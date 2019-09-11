@@ -7,6 +7,7 @@ extends MeshInstance
 export (NodePath) var gui_viewport_path;
 var gui_viewport = null;
 
+
 func _ready():
 	
 	# Get the viewport at the exported NodePath and wait two frames

@@ -1,11 +1,12 @@
-extends RigidBody
+# Extend the VR_Interactable_Rigidbody class so the VR controllers know they can interact
+# and call the functions defined in VR_Interactable_Rigidbody with this object
+extends VR_Interactable_Rigidbody
 
 # The amount of damage a single sword slice does.
 const SWORD_DAMAGE = 20
 
-# The controller that is holding the sword, if there is one.
-# This is set by the controller, so we do not need to check anything.
-var controller
+# The amount of force to multiply by when applying force to a RigidBody.
+const COLLISION_FORCE = 2
 
 func _ready():
 	# Ignore the warnings the from the connect function calls.
@@ -21,25 +22,11 @@ func _ready():
 	get_node("Damage_Area_04").connect("body_entered", self, "body_entered_sword", ["04"])
 
 
-# Called when the interact button is pressed while the object is held.
-func interact():
-	pass
-
-
-# Called when the object is picked up.
-func picked_up():
-	pass
-
-
-# Called when the object is dropped.
-func dropped():
-	pass
-
-
 func body_entered_sword(body, number):
 	# Make sure the body the sword has collided with is not itself.
 	if body == self:
 		pass
+	
 	else:
 		
 		# Figure out which part of the sword collided with the body.
@@ -62,18 +49,23 @@ func body_entered_sword(body, number):
 		
 		elif body.has_method("apply_impulse"):
 			
-			# Calculate roughly what direction the sword collided with the object at.
+			# Calculate roughly which direction the sword collided with the object at.
 			var direction_vector = sword_part.global_transform.origin - body.global_transform.origin
 			
 			# If there is not a controller holding the sword, use the RigidBody node's velocity to move the object(s).
-			# If there IS a controller holding the sword, then use the controller's velocity to move the object(s)
+			# If there IS a controller holding the sword, then use the controller's velocity to move the object(s).
+			# (The controller variable is defined in VR_Interactable_Rigidbody and is set by the VR controller)
 			if controller == null:
-				body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * self.linear_velocity)
+				body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * linear_velocity * COLLISION_FORCE)
 			else:
-				body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * controller.controller_velocity)
+				body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * controller.controller_velocity * COLLISION_FORCE)
 			
 			# Play a sound
 			get_node("AudioStreamPlayer3D").play()
+			
+			# Add a little rumble to the controller
+			if controller != null:
+				controller.rumble = 0.25
 			
 		
 

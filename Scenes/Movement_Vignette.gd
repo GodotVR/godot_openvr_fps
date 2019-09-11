@@ -4,6 +4,7 @@ extends Control
 var controller_one
 var controller_two
 
+
 func _ready():
 	# Wait four frames to ensure the VR interface is ready and going
 	yield(get_tree(), "idle_frame")

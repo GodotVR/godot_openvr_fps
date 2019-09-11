@@ -8,14 +8,19 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "RigidBody",
+"class": "VR_Interactable_Rigidbody",
+"language": "GDScript",
+"path": "res://Scenes/VR_Interactable_Rigidbody.gd"
+} ]
 _global_script_class_icons={
-
+"VR_Interactable_Rigidbody": ""
 }
 
 [application]
 
-config/name="VR Starter Tutorial Complete"
+config/name="Godot OpenVR FPS"
 run/main_scene="res://Game.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
@@ -35,7 +40,6 @@ common/physics_fps=90
 
 [rendering]
 
-quality/filters/anisotropic_filter_level=1
 quality/directional_shadow/size=2048
 quality/shadow_atlas/size=2048
 quality/reflections/high_quality_ggx=false

@@ -5,6 +5,7 @@ var spheres_left = 10
 # A variable to store the UI used for the sphere count.
 var sphere_ui = null
 
+
 func _ready():
 	
 	# We will be using OpenVR to drive the VR interface, so we need to find and initialize it.

@@ -45,6 +45,9 @@ const CONTROLLER_DEADZONE = 0.65
 # The speed the player moves at when moving using the trackpad and/or joystick.
 const MOVEMENT_SPEED = 1.5
 
+# The speed the controller rumble fades at
+const CONTROLLER_RUMBLE_FADE_SPEED = 2.0
+
 # A boolean to track whether the player is moving using this controller.
 # This is needed for the vignette effect that shows only when the player is moving.
 var directional_movement = false
@@ -84,6 +87,12 @@ func _ready():
 
 
 func _physics_process(delta):
+	
+	# Reduce controller rumble by delta, if the controller is rumbling
+	if rumble > 0:
+		rumble -= delta * CONTROLLER_RUMBLE_FADE_SPEED
+		if rumble < 0:
+			rumble = 0
 	
 	# Update the teleportation mesh and position IF the teleport button is down
 	if teleport_button_down == true:
@@ -196,9 +205,9 @@ func button_pressed(button_index):
 	
 	# If the trigger is pressed...
 	if button_index == 15:
-		# Interact with held object, if there is one
+		# Interact with held object, if there is one and it extends VR_Interactable_RigidBody
 		if held_object != null:
-			if held_object.has_method("interact"):
+			if held_object is VR_Interactable_Rigidbody:
 				held_object.interact()
 		
 		# Teleport if we are not holding a object.
@@ -271,12 +280,14 @@ func button_pressed(button_index):
 				# Make the grab raycast mesh invisible.
 				grab_raycast.visible = false
 				
-				# If the RigidBody has a function called picked_up, then call it.
-				if (held_object.has_method("picked_up")):
+				# If the Rigidbody extends VR_Interactable_RigidBody, then call the picked_up function
+				# and assign the controller variable to this controller
+				if held_object is VR_Interactable_Rigidbody:
 					held_object.picked_up()
-				# If the RigidBody has a variable called controller, then assign it to this controller.
-				if ("controller" in held_object):
 					held_object.controller = self
+				
+				# Add a little rumble to the controller
+				rumble = 0.5
 		
 		
 		# Drop/Throw RigidBody if we are holding a object
@@ -290,12 +301,10 @@ func button_pressed(button_index):
 			# Apply a impulse in the direction of the controller's velocity.
 			held_object.apply_impulse(Vector3(0, 0, 0), controller_velocity)
 			
-			# If the RigidBody has a function called dropped, then call it.
-			if held_object.has_method("dropped"):
+			# If the RigidBody extends VR_Interactable_Rigidbody, then call the dropped function
+			# and set the controller variable to null so it knows it is no longer being held
+			if held_object is VR_Interactable_Rigidbody:
 				held_object.dropped()
-			
-			# If the RigidBody has a variable called controller, then set it to null
-			if "controller" in held_object:
 				held_object.controller = null
 			
 			# Set held_object to null since this controller is no longer holding anything.

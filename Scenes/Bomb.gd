@@ -1,4 +1,6 @@
-extends RigidBody
+# Extend the VR_Interactable_Rigidbody class so the VR controllers know they can interact
+# and call the functions defined in VR_Interactable_Rigidbody with this object
+extends VR_Interactable_Rigidbody
 
 # The MeshInstance used for the bomb.
 var bomb_mesh
@@ -18,13 +20,13 @@ var EXPLOSION_TIME = 0.75
 var explosion_timer = 0
 var explode = false
 
+# The amount of force applied when the bomb explodes
+const COLLISION_FORCE = 8
+
 # The particle nodes
 var fuse_particles
 var explosion_particles
 
-# The controller that is currently holding this bomb, if there is one.
-# This is set by the controller, so we do not need to check anything.
-var controller = null
 
 func _ready():
 	
@@ -37,6 +39,7 @@ func _ready():
 	# We do not want to process physics_process since we will be using it
 	# only for the fuse and for destroying the bomb.
 	set_physics_process(false)
+
 
 func _physics_process(delta):
 	
@@ -73,7 +76,10 @@ func _physics_process(delta):
 						body.damage(global_transform.looking_at(body.global_transform.origin, Vector3(0,1,0)), EXPLOSION_DAMAGE)
 					elif body.has_method("apply_impulse"):
 						var direction_vector = body.global_transform.origin - global_transform.origin
-						body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * 1.8)
+						# Change the force based on the distance from the bomb!
+						var bomb_distance = global_transform.origin.distance_to(body.global_transform.origin)
+						var collision_force = (COLLISION_FORCE / bomb_distance) * body.mass
+						body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * collision_force)
 			
 			# Set explode to true and play a sound
 			explode = true
@@ -110,11 +116,3 @@ func interact():
 	set_physics_process(true)
 	fuse_particles.emitting = true
 
-
-# Call when the object is picked up.
-func picked_up():
-	pass
-
-# Called when the object is dropped.
-func dropped():
-	pass

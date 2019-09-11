@@ -1,5 +1,6 @@
-extends RigidBody
-
+# Extend the VR_Interactable_Rigidbody class so the VR controllers know they can interact
+# and call the functions defined in VR_Interactable_Rigidbody with this object
+extends VR_Interactable_Rigidbody
 
 # The mesh used to make the end of the shotgun flash,
 # a constant for how long the shotgun flash is visible,
@@ -8,9 +9,14 @@ var flash_mesh
 const FLASH_TIME = 0.25
 var flash_timer = 0
 
-# The Raycast nodes used for the shotgun firing, and the amount of damage the bullet does.
+# A long rectangle mesh used for the laser sight.
+var laser_sight_mesh
+
+# The Raycast nodes used for the shotgun firing, the amount of damage the bullet does, and how much
+# the bullets move Rigidbody nodes upon collision
 var raycasts
-var BULLET_DAMAGE = 30
+const BULLET_DAMAGE = 30
+const COLLISION_FORCE = 4
 
 
 func _ready():
@@ -18,7 +24,11 @@ func _ready():
 	flash_mesh = get_node("Shotgun_Flash")
 	flash_mesh.visible = false
 	
+	laser_sight_mesh = get_node("LaserSight")
+	laser_sight_mesh.visible = false
+	
 	raycasts = get_node("Raycasts")
+
 
 func _physics_process(delta):
 	# If the flash is visible, then remove time from flash_timer (which is a inverted timer, counts down instead of up)
@@ -51,24 +61,35 @@ func interact():
 				
 				# Get whatever the raycast collided with
 				var body = raycast.get_collider()
+				# Get the distance to the collision point
+				var raycast_distance = global_transform.origin.distance_to(raycast.get_collision_point())
 				
 				# If the body has the damage method, then use that, otherwise use apply_impulse.
 				if body.has_method("damage"):
 					body.damage(raycast.global_transform, BULLET_DAMAGE)
 				elif body.has_method("apply_impulse"):
-					var direction_vector = raycast.global_transform.basis.z.normalized()
-					body.apply_impulse((raycast.global_transform.origin - body.global_transform.origin).normalized(), direction_vector * 4)
+					#var direction_vector = raycast.global_transform.basis.z.normalized()
+					var direction_vector = -raycasts.global_transform.basis.z.normalized()
+					# Change the force based on the distance from the shotgun!
+					var collision_force = (COLLISION_FORCE / raycast_distance) * body.mass
+					body.apply_impulse((raycast.global_transform.origin - body.global_transform.origin).normalized(), direction_vector * collision_force)
 		
 		# Play a sound
 		get_node("AudioStreamPlayer3D").play()
+		
+		# Add a little rumble to the controller
+		if controller != null:
+			controller.rumble = 0.25
 
 
 # Called when the object is picked up.
 func picked_up():
-	pass
+	# Make the laser sight mesh visible.
+	laser_sight_mesh.visible = true
 
 
 # Called when the object is dropped.
 func dropped():
-	pass
+	# Make the laser sight mesh invisible.
+	laser_sight_mesh.visible = false
 

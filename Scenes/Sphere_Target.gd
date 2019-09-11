@@ -19,6 +19,7 @@ func _ready():
 	# for destroying the target.
 	set_physics_process(false)
 
+
 func _physics_process(delta):
 	# If enough time has passed, destroy the target.
 	destroyed_timer += delta
@@ -55,3 +56,4 @@ func damage(_bullet_global_transform, damage):
 		# Play a sound, and tell the game to remove a sphere.
 		get_node("AudioStreamPlayer").play()
 		get_tree().root.get_node("Game").remove_sphere()
+
