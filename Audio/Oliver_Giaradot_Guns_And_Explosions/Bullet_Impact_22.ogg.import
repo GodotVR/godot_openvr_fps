@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Bullet_Impact_22.ogg-50ca25e97e01302dd843b467c756f555.oggstr"
+
+[deps]
+
+source_file="res://Audio/Oliver_Giaradot_Guns_And_Explosions/Bullet_Impact_22.ogg"
+dest_files=[ "res://.import/Bullet_Impact_22.ogg-50ca25e97e01302dd843b467c756f555.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

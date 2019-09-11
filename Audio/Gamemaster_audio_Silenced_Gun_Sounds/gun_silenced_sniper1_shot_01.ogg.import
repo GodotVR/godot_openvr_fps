@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/gun_silenced_sniper1_shot_01.ogg-1ca7ba8b243eb466b580295c7527c08f.oggstr"
+
+[deps]
+
+source_file="res://Audio/Gamemaster_audio_Silenced_Gun_Sounds/gun_silenced_sniper1_shot_01.ogg"
+dest_files=[ "res://.import/gun_silenced_sniper1_shot_01.ogg-1ca7ba8b243eb466b580295c7527c08f.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

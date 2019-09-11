@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/Sphere_Target.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Shpere_Target.scn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/Assets_Material.tres" type="Material" id=3]
+[ext_resource path="res://Audio/Antisample_Rocks_and_Stones/Rock_Impact_Slide_Wood_Cave_MONO_04.ogg" type="AudioStream" id=4]
+
+[sub_resource type="SphereShape" id=1]
+
+radius = 0.27
+
+[node name="Sphere_Target" type="StaticBody" index="0"]
+
+transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 )
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 1
+collision_mask = 1
+friction = 1.0
+bounce = 0.0
+constant_linear_velocity = Vector3( 0, 0, 0 )
+constant_angular_velocity = Vector3( 0, 0, 0 )
+script = ExtResource( 1 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Shpere_Target" parent="." index="0" instance=ExtResource( 2 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+material/0 = ExtResource( 3 )
+_sections_unfolded = [ "Transform", "material" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="." index="1"]
+
+shape = SubResource( 1 )
+disabled = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." index="2"]
+
+stream = ExtResource( 4 )
+volume_db = 0.0
+pitch_scale = 1.0
+autoplay = false
+mix_target = 0
+bus = "Master"
+
+

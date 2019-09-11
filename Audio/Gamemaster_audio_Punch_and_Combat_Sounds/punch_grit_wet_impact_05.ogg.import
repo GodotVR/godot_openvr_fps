@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/punch_grit_wet_impact_05.ogg-bfdee28397697017f0c770559da145e1.oggstr"
+
+[deps]
+
+source_file="res://Audio/Gamemaster_audio_Punch_and_Combat_Sounds/punch_grit_wet_impact_05.ogg"
+dest_files=[ "res://.import/punch_grit_wet_impact_05.ogg-bfdee28397697017f0c770559da145e1.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

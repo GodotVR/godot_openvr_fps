@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/foley_object_grab_pickup_04.ogg-7765544b6b897c73c74c667d41411012.oggstr"
+
+[deps]
+
+source_file="res://Audio/Gamemaster_audio_Punch_and_Combat_Sounds/foley_object_grab_pickup_04.ogg"
+dest_files=[ "res://.import/foley_object_grab_pickup_04.ogg-7765544b6b897c73c74c667d41411012.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0
