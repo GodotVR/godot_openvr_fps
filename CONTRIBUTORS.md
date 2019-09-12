@@ -18,4 +18,4 @@ Please note that this list is no particular order. Is your naming missing from t
 
 #### Want to be on this list?
 
-Please check out the issues on the GitHub repository for ideas on how you can help. We would have to have your help!
+Please check out the issues on the GitHub repository for ideas on how you can help. We would love to have your help!
