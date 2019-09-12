@@ -3,7 +3,7 @@
 ![](https://docs.godotengine.org/en/3.1/_images/starter_vr_tutorial_sword.png)
 
 This repository contains the source and other related files for the Godot VR starter tutorial, which can be found here:
-https://docs.godotengine.org/en/3.1/tutorials/vr/vr_starter_tutorial.html
+https://docs.godotengine.org/en/latest/tutorials/vr/vr_starter_tutorial.html
 
 The tutorial covers how to create a first person shooter (FPS) VR game in Godot using GDscript. The project on this repository is the finished result of the Godot tutorial.
 
