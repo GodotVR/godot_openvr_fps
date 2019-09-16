@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://Assets/CGTuts_OceanHDRI_Freebie_001.hdr" type="Texture" id=2]
@@ -6,14 +6,14 @@
 [ext_resource path="res://Scenes/Right_Controller.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Scenes/Movement_Vignette.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Scenes/Sphere_Target.tscn" type="PackedScene" id=6]
-[ext_resource path="res://GUI.gd" type="Script" id=7]
-[ext_resource path="res://Base_Control.gd" type="Script" id=8]
-[ext_resource path="res://Assets/Titillium-Regular.otf" type="DynamicFontData" id=9]
-[ext_resource path="res://Scenes/Pistol.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Scenes/Reset_Box.tscn" type="PackedScene" id=11]
-[ext_resource path="res://Scenes/Bomb.tscn" type="PackedScene" id=12]
-[ext_resource path="res://Scenes/Sword.tscn" type="PackedScene" id=13]
-[ext_resource path="res://Scenes/Shotgun.tscn" type="PackedScene" id=14]
+[ext_resource path="res://Scenes/Main_VR_GUI.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Pistol.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Scenes/Reset_Box.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Scenes/Bomb.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Scenes/Sword.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Scenes/Shotgun.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Scenes/GUI.gd" type="Script" id=13]
+[ext_resource path="res://Assets/Titillium-Regular.otf" type="DynamicFontData" id=14]
 [ext_resource path="res://Audio/Soundrangers_Nature_Ambience/coastal_ambience_01_120_loop.ogg" type="AudioStream" id=15]
 
 [sub_resource type="CubeMesh" id=1]
@@ -60,29 +60,6 @@ glow_levels/5 = false
 glow_intensity = 1.0
 glow_bicubic_upscale = true
 
-[sub_resource type="QuadMesh" id=13]
-size = Vector2( 2, 2 )
-
-[sub_resource type="CubeMesh" id=14]
-
-[sub_resource type="SpatialMaterial" id=15]
-albedo_color = Color( 0.320313, 0.320313, 0.320313, 1 )
-metallic = 1.0
-roughness = 0.1
-
-[sub_resource type="ConvexPolygonShape" id=16]
-points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
-
-[sub_resource type="DynamicFont" id=17]
-size = 82
-use_mipmaps = true
-use_filter = true
-font_data = ExtResource( 9 )
-
-[sub_resource type="DynamicFont" id=18]
-size = 42
-font_data = ExtResource( 9 )
-
 [sub_resource type="CylinderMesh" id=19]
 top_radius = 0.2
 bottom_radius = 0.5
@@ -117,7 +94,7 @@ flags_unshaded = true
 size = 32
 use_mipmaps = true
 use_filter = true
-font_data = ExtResource( 9 )
+font_data = ExtResource( 14 )
 
 [sub_resource type="SpatialMaterial" id=28]
 flags_unshaded = true
@@ -470,6 +447,7 @@ transform = Transform( 0.223386, 0.830958, -0.509517, 0, 0.522726, 0.852501, 0.9
 shadow_enabled = true
 
 [node name="ARVROrigin" type="ARVROrigin" parent="."]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.177191, 14 )
 
 [node name="Player_Camera" type="ARVRCamera" parent="ARVROrigin"]
@@ -515,158 +493,48 @@ transform = Transform( -0.845237, 0, 1.81262, 0, 2, 0, -1.81262, 0, -0.845237, -
 [node name="Sphere_Target10" parent="Spheres" instance=ExtResource( 6 )]
 transform = Transform( -0.845237, 0, 1.81262, 0, 2, 0, -1.81262, 0, -0.845237, -36.6337, 1.98771, -23.6694 )
 
-[node name="Main_GUI" type="Spatial" parent="."]
-editor/display_folded = true
-transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 4.77395, 4.96041, 19.7775 )
-
-[node name="GUI_Mesh" type="MeshInstance" parent="Main_GUI"]
-transform = Transform( -1, 8.74228e-008, 0, 8.74228e-008, 1, 8.74228e-008, 7.64274e-015, 8.74228e-008, -1, 0, 0, -0.125 )
-mesh = SubResource( 13 )
-material/0 = null
-script = ExtResource( 7 )
-gui_viewport_path = NodePath("../GUI")
-
-[node name="GUI_Board" type="MeshInstance" parent="Main_GUI"]
-editor/display_folded = true
-transform = Transform( 1.25, 0, 0, 0, 1.25, 0, 0, 0, 0.25, -0.014788, -0.123899, 0.132493 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 15 )
-
-[node name="StaticBody" type="StaticBody" parent="Main_GUI/GUI_Board"]
-
-[node name="CollisionShape" type="CollisionShape" parent="Main_GUI/GUI_Board/StaticBody"]
-shape = SubResource( 16 )
-
-[node name="GUI" type="Viewport" parent="Main_GUI"]
-editor/display_folded = true
-size = Vector2( 800, 800 )
-transparent_bg = true
-hdr = false
-usage = 1
-render_target_v_flip = true
-gui_snap_controls_to_pixels = false
-
-[node name="Base_Control" type="Control" parent="Main_GUI/GUI"]
-margin_right = 800.0
-margin_bottom = 800.0
-script = ExtResource( 8 )
-
-[node name="Label" type="Label" parent="Main_GUI/GUI/Base_Control"]
-anchor_right = 1.0
-margin_bottom = 99.0
-custom_fonts/font = SubResource( 17 )
-text = "Godot VR Tutorial"
-align = 1
-valign = 1
-
-[node name="Label_Info" type="Label" parent="Main_GUI/GUI/Base_Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -400.0
-margin_top = -306.0
-margin_right = 400.0
-margin_bottom = -207.0
-custom_fonts/font = SubResource( 18 )
-custom_colors/font_color = Color( 0, 1, 0.273438, 1 )
-text = "Find all of the spheres and destroy them!"
-align = 1
-valign = 1
-
-[node name="Label_Controls" type="Label" parent="Main_GUI/GUI/Base_Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -359.0
-margin_top = -201.0
-margin_right = 675.0
-margin_bottom = 326.0
-rect_scale = Vector2( 0.7, 0.7 )
-custom_fonts/font = SubResource( 18 )
-custom_colors/font_color = Color( 0.992188, 1, 0, 1 )
-text = "Teleport by pressing the trigger while not holding anything
-
-Move with the touchpads and/or the joysticks
-
-Grab and release objects by pressing the grip button
-
-Change grab modes by pressing the menu button
-
-While holding a object, press the trigger to interact"
-align = 1
-valign = 1
-
-[node name="Label_Sphere_Count" type="Label" parent="Main_GUI/GUI/Base_Control"]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -400.0
-margin_top = -226.0
-margin_right = 400.0
-margin_bottom = -127.0
-custom_fonts/font = SubResource( 18 )
-custom_colors/font_color = Color( 0, 1, 0.273438, 1 )
-text = "10 Spheres remaining"
-align = 1
-valign = 1
-
-[node name="Label_Reset" type="Label" parent="Main_GUI/GUI/Base_Control"]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -400.0
-margin_top = -99.0
-margin_right = 400.0
-custom_fonts/font = SubResource( 18 )
-custom_colors/font_color = Color( 1, 0, 0, 1 )
-text = "Grab and interact with the
-red Box to reset!"
-align = 1
-valign = 1
+[node name="Main_VR_GUI" parent="." instance=ExtResource( 7 )]
 
 [node name="Interactable_Objects" type="Spatial" parent="."]
+editor/display_folded = true
 
-[node name="Pistol" parent="Interactable_Objects" instance=ExtResource( 10 )]
+[node name="Pistol" parent="Interactable_Objects" instance=ExtResource( 8 )]
 transform = Transform( -2.32729e-008, 0.258819, 0.965926, 1, -4.37114e-008, 3.58063e-008, 5.14893e-008, 0.965926, -0.258819, 26.8528, 7.48704, 17.7386 )
 
-[node name="Pistol2" parent="Interactable_Objects" instance=ExtResource( 10 )]
+[node name="Pistol2" parent="Interactable_Objects" instance=ExtResource( 8 )]
 transform = Transform( -1.50459e-008, -0.258819, -0.965926, 1, 7.54979e-008, -3.58063e-008, 8.21927e-008, -0.965926, 0.258819, 26.3313, 7.48704, 17.6496 )
 
-[node name="Reset_Box" parent="Interactable_Objects" instance=ExtResource( 11 )]
+[node name="Reset_Box" parent="Interactable_Objects" instance=ExtResource( 9 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4.98995, 0.988414, 18.6295 )
 
-[node name="Bomb" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.7935, 1.38314, -23.8408 )
 
-[node name="Bomb2" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb2" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.9647, 1.38314, -24.1463 )
 
-[node name="Bomb3" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb3" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2767, 1.38314, -24.0626 )
 
-[node name="Bomb4" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb4" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.1282, 1.38314, -23.7863 )
 
-[node name="Bomb5" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb5" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.2231, 1.38314, -24.3384 )
 
-[node name="Bomb6" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb6" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4989, 1.38314, -24.1925 )
 
-[node name="Bomb7" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb7" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.4989, 1.38314, -23.9261 )
 
-[node name="Bomb8" parent="Interactable_Objects" instance=ExtResource( 12 )]
+[node name="Bomb8" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 23.3611, 1.38314, -23.6749 )
 
-[node name="Sword" parent="Interactable_Objects" instance=ExtResource( 13 )]
+[node name="Sword" parent="Interactable_Objects" instance=ExtResource( 11 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.5851, 1.50581, 27.2947 )
 
-[node name="Shotgun" parent="Interactable_Objects" instance=ExtResource( 14 )]
+[node name="Shotgun" parent="Interactable_Objects" instance=ExtResource( 12 )]
 transform = Transform( -4.37114e-008, 1, 0, -1, -4.37114e-008, 0, 0, 0, 1, -7.61642, 1.39338, -25.72 )
 
 [node name="Teleport_Mesh" type="MeshInstance" parent="."]
@@ -1094,7 +962,7 @@ editor/display_folded = true
 transform = Transform( 0.943157, 0, 0.332347, 0, 1, 0, -0.332347, 0, 0.943157, 24.7095, 7.78223, 17.74 )
 mesh = SubResource( 25 )
 material/0 = SubResource( 26 )
-script = ExtResource( 7 )
+script = ExtResource( 13 )
 gui_viewport_path = NodePath("GUI")
 
 [node name="GUI" type="Viewport" parent="GUI_Pistols"]
@@ -1130,7 +998,7 @@ editor/display_folded = true
 transform = Transform( -0.0973867, 0, -0.995247, 0, 1, 0, 0.995247, 0, -0.0973867, -6.29051, 2.78223, -25.26 )
 mesh = SubResource( 25 )
 material/0 = SubResource( 26 )
-script = ExtResource( 7 )
+script = ExtResource( 13 )
 gui_viewport_path = NodePath("GUI")
 
 [node name="GUI" type="Viewport" parent="GUI_Shotgun"]
@@ -1166,7 +1034,7 @@ editor/display_folded = true
 transform = Transform( 0.725533, 0, -0.688187, 0, 1, 0, 0.688187, 0, 0.725533, -25.4911, 1.85187, 24.5165 )
 mesh = SubResource( 25 )
 material/0 = SubResource( 28 )
-script = ExtResource( 7 )
+script = ExtResource( 13 )
 gui_viewport_path = NodePath("GUI")
 
 [node name="GUI" type="Viewport" parent="GUI_Sword"]
@@ -1200,7 +1068,7 @@ editor/display_folded = true
 transform = Transform( 0.422618, 0, -0.906308, 0, 1, 0, 0.906308, 0, 0.422618, 24.4495, 1.78223, -25.3418 )
 mesh = SubResource( 25 )
 material/0 = SubResource( 29 )
-script = ExtResource( 7 )
+script = ExtResource( 13 )
 gui_viewport_path = NodePath("GUI")
 
 [node name="GUI" type="Viewport" parent="GUI_Bombs"]

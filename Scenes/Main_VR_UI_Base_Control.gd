@@ -9,7 +9,7 @@ var sphere_count_label
 
 func _ready():
 	sphere_count_label = get_node("Label_Sphere_Count")
-	
+
 	# Get the root node of the Game scene, and assign this script to sphere_ui so
 	# update_ui gets called when a sphere is removed.
 	get_tree().root.get_node("Game").sphere_ui = self
