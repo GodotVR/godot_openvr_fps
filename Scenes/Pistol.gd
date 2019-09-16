@@ -60,7 +60,7 @@ func interact():
 			
 			# If the body has the damage method, then use that, otherwise use apply_impulse.
 			if body.has_method("damage"):
-				body.damage(raycast.global_transform, BULLET_DAMAGE)
+				body.damage(BULLET_DAMAGE)
 			elif body.has_method("apply_impulse"):
 				var direction_vector = raycast.global_transform.basis.z.normalized()
 				# Change the force based on the distance from the pistol!

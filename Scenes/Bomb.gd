@@ -73,7 +73,7 @@ func _physics_process(delta):
 				else:
 					# If the body has the damage function, than use that. If it does not, then push it using apply_impulse.
 					if body.has_method("damage"):
-						body.damage(global_transform.looking_at(body.global_transform.origin, Vector3(0,1,0)), EXPLOSION_DAMAGE)
+						body.damage(EXPLOSION_DAMAGE)
 					elif body.has_method("apply_impulse"):
 						var direction_vector = body.global_transform.origin - global_transform.origin
 						# Change the force based on the distance from the bomb!

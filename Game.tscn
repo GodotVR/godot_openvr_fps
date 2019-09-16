@@ -629,7 +629,6 @@ align = 1
 valign = 1
 
 [node name="Interactable_Objects" type="Spatial" parent="."]
-editor/display_folded = true
 
 [node name="Pistol" parent="Interactable_Objects" instance=ExtResource( 10 )]
 transform = Transform( -2.32729e-008, 0.258819, 0.965926, 1, -4.37114e-008, 3.58063e-008, 5.14893e-008, 0.965926, -0.258819, 26.8528, 7.48704, 17.7386 )

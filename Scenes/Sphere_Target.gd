@@ -27,7 +27,7 @@ func _physics_process(delta):
 		queue_free()
 
 
-func damage(_bullet_global_transform, damage):
+func damage(damage):
 	
 	# On the extremely odd chance this target could be damaged and destroyed, return
 	# so no other code is called.
