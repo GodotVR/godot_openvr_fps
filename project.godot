@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Godot OpenVR FPS"
+config/name="VR Starter Tutorial Complete"
 run/main_scene="res://Game.tscn"
 run/low_processor_mode=true
 config/icon="res://icon.png"
@@ -40,6 +40,7 @@ common/physics_fps=90
 
 [rendering]
 
+quality/filters/anisotropic_filter_level=1
 quality/directional_shadow/size=2048
 quality/shadow_atlas/size=2048
 quality/reflections/high_quality_ggx=false

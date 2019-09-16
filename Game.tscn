@@ -53,6 +53,7 @@ panorama = ExtResource( 2 )
 [sub_resource type="Environment" id=12]
 background_mode = 2
 background_sky = SubResource( 11 )
+glow_enabled = true
 glow_levels/2 = true
 glow_levels/4 = true
 glow_levels/5 = false
@@ -469,7 +470,6 @@ transform = Transform( 0.223386, 0.830958, -0.509517, 0, 0.522726, 0.852501, 0.9
 shadow_enabled = true
 
 [node name="ARVROrigin" type="ARVROrigin" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.177191, 14 )
 
 [node name="Player_Camera" type="ARVRCamera" parent="ARVROrigin"]

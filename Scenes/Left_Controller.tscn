@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://VR_Controller.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/VR_Controller.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Hand_Left.scn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/Assets_Material.tres" type="Material" id=3]
 [ext_resource path="res://Audio/Gamemaster_audio_Punch_and_Combat_Sounds/foley_object_grab_pickup_04.ogg" type="AudioStream" id=4]
