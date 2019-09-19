@@ -2,16 +2,16 @@
 # and call the functions defined in VR_Interactable_Rigidbody with this object.
 extends VR_Interactable_Rigidbody
 
-# A variable to hold the mesh that is used to simulate the muzzle flash on the pistol
+# A variable to hold the mesh that is used to simulate the muzzle flash on the pistol.
 var flash_mesh
-# A constant to define how long the muzzle flash on the pistol will be visible
+# A constant to define how long the muzzle flash on the pistol will be visible.
 const FLASH_TIME = 0.25
 # A variable to hold the amount of time the muzzle flash has been visible for.
 var flash_timer = 0
 
 # A variable that will hold a long mesh that will act as the pistol's laser sight.
 var laser_sight_mesh
-# A variable to hold a reference to the AudioStreamPlayer used for the pistol firing sound.
+# A variable to hold a reference to the AudioStreamPlayer used for the pistol's firing sound.
 var pistol_fire_sound
 
 # A variable to hold the Raycast that is used for calculating the bullet position and normal
@@ -38,8 +38,6 @@ func _ready():
 
 
 func _physics_process(delta):
-	# If the flash is visible, then remove time from flash_timer (which is a inverted timer, counts down instead of up)
-	
 	# If the muzzle flash is visible...
 	# (flash_timer will be more than zero if the pistol's muzzle flash is visible.)
 	if flash_timer > 0:
@@ -53,9 +51,6 @@ func _physics_process(delta):
 
 # Called when the interact button is pressed while the object is held by a VR controller.
 func interact():
-	
-	# If the flash timer says the flash mesh is not visible, then we can fire again.
-	
 	# If the muzzle flash is invisible...
 	# (We can use this to limit the rate of fire for the pistol to the length of time the muzzle
 	# flash is visible)
@@ -75,7 +70,7 @@ func interact():
 			# Use the raycast's positive Z axis to determine the direction of the raycast.
 			var direction_vector = raycast.global_transform.basis.z.normalized()
 			# Get the distance from the raycast to the raycast collision point.
-			var raycast_distance = global_transform.origin.distance_to(raycast.get_collision_point())
+			var raycast_distance = raycast.global_transform.origin.distance_to(raycast.get_collision_point())
 			
 			# If the CollisionBody has a function called damage, then call it so it takes damage.
 			if body.has_method("damage"):
