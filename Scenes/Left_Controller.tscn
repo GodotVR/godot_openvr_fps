@@ -79,11 +79,11 @@ shape = SubResource( 5 )
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( 4 )
 
-[node name="GrabCast" type="RayCast" parent="."]
+[node name="Grab_Cast" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.5, -0.866025, 0, 0.866025, 0.5, 0, 0, 0 )
 cast_to = Vector3( 0, -0.5, 0 )
 
-[node name="Mesh" type="MeshInstance" parent="GrabCast"]
+[node name="Mesh" type="MeshInstance" parent="Grab_Cast"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.244232, 7.45058e-009 )
 mesh = SubResource( 6 )
 material/0 = SubResource( 7 )

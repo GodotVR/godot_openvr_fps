@@ -1,7 +1,7 @@
 extends ARVRController
 
-# This is only a rough approximation of the controller's velocity, though it works
-# fairly well in most cases.
+# A variable to hold the VR controller's velocity.
+# This is only a rough approximation, though it works fairly well in most cases.
 var controller_velocity = Vector3(0,0,0)
 # A variable to hold the VR controller's last position in 3D space.
 # This is used to get a rough approximation of the VR controller's velocity.
@@ -22,20 +22,20 @@ var held_object_data = {"mode":RigidBody.MODE_RIGID, "layer":1, "mask":1}
 var grab_area
 # A variable to hold the Raycast node used to grab objects.
 var grab_raycast
-# The current grab mode
-# A variable to define the grab mode the VR controlelr is using.
+
+# A variable to define the grab mode the VR controller is using.
 #
 # There are only two implemented modes: Area and Rayacst.
 # Area mode allows for grabbing objects with an Area node, while Raycast allows for grabbing objects
 # with a Raycast node.
 var grab_mode = "AREA"
-# A variable to hold the node that will be used to position and rotate objects held by the VR controller.
+# A variable to hold the node that will be used to update the position and rotation of held objects.
 var grab_pos_node
 
 # A variable to hold the hand mesh that is used to represent the VR controller when the
 # player is not holding anything.
 var hand_mesh
-# A variable to hold the AudioStreamPlayer3D that contains the pickup/drop noise.
+# A variable to hold the AudioStreamPlayer3D node that contains the pickup/drop sound.
 var hand_pickup_drop_sound
 
 # A variable to hold the position of the player will be teleported to when VR controller teleports the player.
@@ -56,13 +56,13 @@ var teleport_raycast
 # The deadzone defined below is large so little bumps on the trackpad/joystick do not move the player.
 const CONTROLLER_DEADZONE = 0.65
 
-# A constant to define the speed the player moves at when using the trackpad/joystick.
+# A constant to define the speed the player moves at when using the touchpad/joystick.
 const MOVEMENT_SPEED = 1.5
 
 # A constant to define how fast the VR controller rumble fades.
 const CONTROLLER_RUMBLE_FADE_SPEED = 2.0
 
-# A variable to track whether this VR controller is moving the player.
+# A variable to hold whether this VR controller is moving the player using the touchpad/joystick.
 # (This is needed for the vignette effect, as it only shows when the VR controller(s) are moving the player)
 var directional_movement = false
 
@@ -71,9 +71,6 @@ func _ready():
 	# Ignore the warnings the from the connect function calls.
 	# (We will not need the returned values for this tutorial)
 	# warning-ignore-all:return_value_discarded
-	
-	# Get the teleport nodes (notice how the teleport mesh is not part of the controller, but
-	# rather part of Game!)
 	
 	# Get the teleport raycast node and assign it to the teleport_raycast variable.
 	teleport_raycast = get_node("RayCast")
@@ -93,10 +90,10 @@ func _ready():
 	# Get the grab area node, the grab raycast node, and the grab position node. Assign these nodes to
 	# their respective variables.
 	grab_area = get_node("Area")
-	grab_raycast = get_node("GrabCast")
+	grab_raycast = get_node("Grab_Cast")
 	grab_pos_node = get_node("Grab_Pos")
 	
-	# Set the VR controller's inital grab mode to Area, and make the grab_raycast node invisible.
+	# Set the VR controller's initial grab mode to Area, and make the grab_raycast node invisible.
 	grab_mode = "AREA"
 	grab_raycast.visible = false
 	
@@ -148,10 +145,6 @@ func _physics_process(delta):
 		# It is not perfect, but it gets a rough idea of the velocity of the VR controller.
 		_physics_process_update_controller_velocity(delta)
 	
-	# Update the held object's position and rotation if there is one.
-	# Because of how scale works, we need to temporarily store it and then reset the
-	# scale, otherwise the scale will always be the same as the controller.
-	
 	# If the VR controller is holding an object...
 	if held_object != null:
 		# Store the held object's scale temporarily.
@@ -168,17 +161,11 @@ func _physics_process(delta):
 	_physics_process_directional_movement(delta);
 
 
-# This function does a rough calculate of the VR controller's veloctiy by calculating the relative changes
+# This function does a rough calculate of the VR controller's velocity by calculating the relative changes
 # in position over the last 30 _physics_process calls.
 func _physics_process_update_controller_velocity(delta):
 	# Reset the controller_velocity variable
 	controller_velocity = Vector3(0,0,0)
-	
-	# Add the following lines if you want to use the velocity
-	# calculations from before.
-	# Using the prior calculations gives a smoother throwing/catching
-	# experience, though it is not perfect...
-	# Add the previous controller velocities
 	
 	# If there are cached velocities saved...
 	if prior_controller_velocities.size() > 0:
@@ -252,9 +239,6 @@ func _physics_process_directional_movement(delta):
 	var forward_direction = get_parent().get_node("Player_Camera").global_transform.basis.z.normalized()
 	var right_direction = get_parent().get_node("Player_Camera").global_transform.basis.x.normalized()
 	
-	# Calculate how much we will move by adding both the trackpad and the joystick vectors together
-	# and normalizing them.
-	
 	# Because the trackpad and the joystick will both move the player, we can add them together and normalize
 	# the result, giving the combined movement direction
 	var movement_vector = (trackpad_vector + joystick_vector).normalized()
@@ -317,9 +301,9 @@ func _on_button_pressed_trigger():
 			teleport_button_down = true
 			teleport_mesh.visible = true
 			teleport_raycast.visible = true
-	# If the VR contoller IS currently holding something...
+	# If the VR controller IS currently holding something...
 	else:
-		# If the objecth the VR controller is holding extends VR_Interactable_RigidBody...
+		# If the object the VR controller is holding extends VR_Interactable_RigidBody...
 		if held_object is VR_Interactable_Rigidbody:
 			# Call the interact function so the object can do whatever it does when interacted with.
 			held_object.interact()
