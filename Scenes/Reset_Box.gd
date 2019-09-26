@@ -13,7 +13,7 @@ var reset_timer = 0
 # A constant to define how long the reset box has to wait before being reset.
 const RESET_TIME = 10
 # A constant to define how far the reset box has to be away from the starting position
-# before the timer starts counting down
+# before the timer starts
 const RESET_MIN_DISTANCE = 1
 
 
