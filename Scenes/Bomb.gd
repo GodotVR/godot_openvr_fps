@@ -6,23 +6,23 @@ extends VR_Interactable_Rigidbody
 # We need this so we can make the bomb mesh invisible when the bomb explodes.
 var bomb_mesh
 
-# A constant that defines how long the fuse will "burn" before we explode the bomb.
+# A constant to defines how long the fuse will "burn" before we explode the bomb.
 const FUSE_TIME = 4
-# A variable that will be used to track how long the fuse has been "burning".
+# A variable to hold the length of time that has passed since the bomb's fuse has started to burn.
 var fuse_timer = 0
 
-# A variable to hold the Area node used to damage/push objects within the explosion.
+# A variable to hold the Area node used to detect objects within the bomb's explosion.
 var explosion_area
-# A constant that defines how much damage the bomb will do to objects within the explosion
-# radius when the bomb explodes
+# A constant to define how much damage is applied with the bomb explodes.
 const EXPLOSION_DAMAGE = 100
-# A constant that defines how long the Area node used for the explosion will last before
-# the bomb scene is deleted from the scene.
+# A constant to define how long the bomb will last in the scene after it explodes.
+# This value should be the same as the lifetime property of the explosion Particles node
+# so the bomb is removed from the scene once the explosion particles have finished.
 const EXPLOSION_TIME = 0.75
-# A variable to track the length of time from when the bomb exploded
+# A variable to hold the length of time that has passed since the bomb exploded.
 var explosion_timer = 0
-# A variable to track whether the bomb has exploded or not
-var explode = false
+# A variable to hold whether the bomb has exploded or not
+var exploded = false
 
 # A constant that defines the amount of force applied to RigidBody nodes when the bomb
 # explodes. This force is strongest when the object is right next to the bomb.
@@ -79,38 +79,38 @@ func _physics_process(delta):
 			collision_mask = 0
 			mode = RigidBody.MODE_STATIC
 			
-			# Go through every CollisionBody within the explosion Area node...
+			# Go through every PhysicsBody within the explosion Area node...
 			for body in explosion_area.get_overlapping_bodies():
-				# If the CollisionBody is the bomb itself, then ignore it so the bomb does not explode itself.
+				# If the PhysicsBody is the bomb itself, then ignore it so the bomb does not explode itself.
 				if body == self:
 					pass
-				# If the CollisionBody is NOT the bomb...
+				# If the PhysicsBody is NOT the bomb...
 				else:
-					# If the CollisionBody has a function called damage, then call it so it takes explosion damage.
+					# If the PhysicsBody has a function called damage, then call it so it takes explosion damage.
 					if body.has_method("damage"):
 						body.damage(EXPLOSION_DAMAGE)
-					# If the CollisionBody has a function called apply_impulse...
-					elif body.has_method("apply_impulse"):
-						# Calculate the direction from the bomb to the CollisionBody
+					
+					# If the PhysicsBody is a RigidBody node...
+					if body is RigidBody:
+						# Calculate the direction from the bomb to the PhysicsBody
 						var direction_vector = body.global_transform.origin - global_transform.origin
-						# Change the force based on the distance from the bomb!
-						# Get the bomb's distance from the CollisionBody
+						# Get the bomb's distance from the PhysicsBody
 						var bomb_distance = direction_vector.length()
 						# Calculate how much force will be applied. Account for the distance of the bomb and the
 						# mass of the other object so that objects closer to the bomb are pushed farther
 						# when the bomb explodes.
 						var collision_force = (COLLISION_FORCE / bomb_distance) * body.mass
-						# Push the CollisionBody using the apply_impulse function!
-						body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * collision_force)
+						# Push the PhysicsBody using the apply_impulse function!
+						body.apply_impulse(Vector3.ZERO, direction_vector.normalized() * collision_force)
 			
 			# Set the explode variable to true so the code knows the bomb has exploded
-			explode = true
+			exploded = true
 			# Play the explosion sound!
 			explosion_sound.play()
 	
 	
 	# If the bomb has exploded, then we need to wait until the particles are done.
-	if explode:
+	if exploded == true:
 		
 		# Add time, delta, to explosion_timer. We need to do this because we need to wait until the explosion
 		# particles are finished before freeing/deleting the bomb from the scene.
@@ -123,9 +123,6 @@ func _physics_process(delta):
 			# set to true and the node is freed.
 			# To ensure this bug does not happen for this project, we will set monitoring to false.
 			explosion_area.monitoring = false
-			
-			# If there is a VR controller holding this bomb, then we need to tell it that it is no longer
-			# holding a bomb, and we need to make it's hand mesh visible again.
 			
 			# If there is a VR controller holding this bomb, we need to tell it that the controller is now
 			# holding nothing.

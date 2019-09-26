@@ -165,7 +165,7 @@ func _physics_process(delta):
 # in position over the last 30 _physics_process calls.
 func _physics_process_update_controller_velocity(delta):
 	# Reset the controller_velocity variable
-	controller_velocity = Vector3(0,0,0)
+	controller_velocity = Vector3.ZERO
 	
 	# If there are cached velocities saved...
 	if prior_controller_velocities.size() > 0:
@@ -276,12 +276,12 @@ func button_pressed(button_index):
 		_on_button_pressed_trigger()
 	
 	# If the grab button is pressed...
-	if button_index == 2:
+	elif button_index == 2:
 		# Call the _on_button_pressed_grab function.
 		_on_button_pressed_grab()
 		
 	# If the menu button on the VR controller is pressed...
-	if button_index == 1:
+	elif button_index == 1:
 		# Call the _on_button_pressed_menu function.
 		_on_button_pressed_menu()
 

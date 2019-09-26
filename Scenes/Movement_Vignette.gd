@@ -28,7 +28,7 @@ func _ready():
 	# Set the size to be the same size as the VR headset, and set the position to (0,0)
 	# so it covers the entire VR view.
 	rect_size = interface.get_render_targetsize()
-	rect_position = Vector2(0,0)
+	rect_position = Vector2.ZERO
 	
 	# Get the right and left controllers and assign them to the proper variables.
 	controller_one = get_parent().get_node("Left_Controller")
@@ -42,10 +42,6 @@ func _process(_delta):
 	# If one of the VR controllers have not been assigned, then do nothing!
 	if (controller_one == null or controller_two == null):
 		return
-	
-	# Only make the vignette visible if one (or both) of the controllers are moving the player using
-	# the touchpad or joystick. If neither of the controllers are moving the player, then make the
-	# vignette invisible.
 	
 	# If either of the VR controllers are using directional movement, movement through the joystick
 	# or touchpad, then we want to show the vignette to help reduce motion sickness.

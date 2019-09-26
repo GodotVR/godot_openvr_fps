@@ -67,32 +67,33 @@ func interact():
 			if not raycast is RayCast:
 				continue
 			
-			# Rotate the racyast randomly around a small 10 degrees to 10 degrees cone.
-			# This will give the shotgun 'bullet's some random spread.
-			raycast.rotation_degrees = Vector3(90 + rand_range(10, -10), 0, rand_range(10, -10))
+			# Rotate the raycast randomly around a small 10 degrees to 10 degrees cone.
+            # This will make the raycast rotate randomly within a small cone shape.
+			raycast.rotation_degrees = Vector3(rand_range(10, -10), 0, rand_range(10, -10))
 			
 			# Force the raycast node to update so it collides with the latest version of the physics world.
 			raycast.force_raycast_update()
 			# If the raycast collided with something...
 			if raycast.is_colliding():
 				
-				# Get the CollisionBody the raycast collided with
+				# Get the PhysicsBody the raycast collided with
 				var body = raycast.get_collider()
 				# Use the raycast's positive Z axis to determine the direction of the raycast.
 				var direction_vector = raycasts.global_transform.basis.z.normalized()
 				# Get the distance from the node that holds the Raycasts to the raycast collision point.
 				var raycast_distance = raycasts.global_transform.origin.distance_to(raycast.get_collision_point())
 				
-				# If the CollisionBody has a function called damage, then call it so it takes damage.
+				# If the PhysicsBody has a function called damage, then call it so it takes damage.
 				if body.has_method("damage"):
 					body.damage(BULLET_DAMAGE)
-				# If the CollisionBody has a function called apply_impulse...
-				elif body.has_method("apply_impulse"):
+				
+				# If the PhysicsBody is a RigidBody node...
+				if body is RigidBody:
 					# Calculate how much force will be applied. Account for the distance of the raycast and the
 					# mass of the other object so that objects closer to the shotgun are pushed farther
 					# when the bullet from the shotgun collides.
 					var collision_force = (COLLISION_FORCE / raycast_distance) * body.mass
-					# Push the CollisionBody using the apply_impulse function!
+					# Push the PhysicsBody using the apply_impulse function!
 					body.apply_impulse((raycast.global_transform.origin - body.global_transform.origin).normalized(), direction_vector * collision_force)
 		
 		# Play the shotgun firing sound!

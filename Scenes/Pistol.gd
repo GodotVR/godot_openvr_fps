@@ -65,7 +65,7 @@ func interact():
 		# If the raycast collided with something...
 		if raycast.is_colliding():
 			
-			# Get the CollisionBody the raycast collided with
+			# Get the PhysicsBody the raycast collided with
 			var body = raycast.get_collider()
 			# Use the raycast's positive Z axis to determine the direction of the raycast.
 			var direction_vector = raycast.global_transform.basis.z.normalized()
@@ -75,14 +75,15 @@ func interact():
 			# If the CollisionBody has a function called damage, then call it so it takes damage.
 			if body.has_method("damage"):
 				body.damage(BULLET_DAMAGE)
-			# If the CollisionBody has a function called apply_impulse...
-			elif body.has_method("apply_impulse"):
+			
+			# If the PhysicsBody is a RigidBody node...
+			if body is RigidBody:
 				# Calculate how much force will be applied. Account for the distance of the raycast and the
 				# mass of the other object so that objects closer to the pistol are pushed farther
 				# when the bullet from the pistol collides.
 				var collision_force = (COLLISION_FORCE / raycast_distance) * body.mass
-				# Push the CollisionBody using the apply_impulse function!
-				body.apply_impulse((raycast.global_transform.origin - body.global_transform.origin).normalized(), direction_vector * collision_force)
+				# Push the PhysicsBody using the apply_impulse function!
+				body.apply_impulse(Vector3.ZERO, direction_vector * collision_force)
 		
 		# Play the pistol firing sound!
 		pistol_fire_sound.play()
