@@ -1,79 +1,66 @@
-extends RigidBody
+# Extend the VR_Interactable_Rigidbody class so the VR controllers know they can interact
+# and call the functions defined in VR_Interactable_Rigidbody with this object.
+extends VR_Interactable_Rigidbody
 
-# The amount of damage a single sword slice does.
-const SWORD_DAMAGE = 20
+# A constant to define the amount of damage the sword does.
+# This amount of damage is applied to every object in the sword on every _physics_process call
+const SWORD_DAMAGE = 2
 
-# The controller that is holding the sword, if there is one.
-# This is set by the controller, so we do not need to check anything.
-var controller
+# A constant that defines the amount of force applied to RigidBody nodes when the sword
+# collides with a PhysicsBody.
+const COLLISION_FORCE = 0.15
+
+# A variable to hold the KinematicBody used to detect whether the sword is stabbing
+# a PhysicsBody node or not.
+var damage_body = null
+
+# A variable to hold the AudioStreamPlayer3D node that plays when the sword collides with something.
+var sword_noise = null
+
 
 func _ready():
-	# Ignore the warnings the from the connect function calls.
-	# We will not need the returned value for this tutorial.
-	# warning-ignore-all:return_value_discarded
+	# Get the KinematicBody the sword will use for collision detection and assign it to the
+	# damage_body variable.
+	damage_body = get_node("Damage_Body")
+	# The KinematicBody uses the same layer/mask as the sword Rigidbody, so we need to add
+	# this node as a collision exception so it does not effect the collision detection.
+	damage_body.add_collision_exception_with(self)
+	# Get the AudioStreamPlayer3D node and assign it to sword_noise
+	sword_noise = get_node("AudioStreamPlayer3D")
+
+
+func _physics_process(_delta):
 	
-	# Connect all of the tiny area's that compose the length of the sword.
-	# We need to use several small areas so we can roughly know where on the sword the
-	# object that has entered the sword is.
-	get_node("Damage_Area_01").connect("body_entered", self, "body_entered_sword", ["01"])
-	get_node("Damage_Area_02").connect("body_entered", self, "body_entered_sword", ["02"])
-	get_node("Damage_Area_03").connect("body_entered", self, "body_entered_sword", ["03"])
-	get_node("Damage_Area_04").connect("body_entered", self, "body_entered_sword", ["04"])
-
-
-# Called when the interact button is pressed while the object is held.
-func interact():
-	pass
-
-
-# Called when the object is picked up.
-func picked_up():
-	pass
-
-
-# Called when the object is dropped.
-func dropped():
-	pass
-
-
-func body_entered_sword(body, number):
-	# Make sure the body the sword has collided with is not itself.
-	if body == self:
-		pass
-	else:
+	# Use the move_and_collide function to get a KinematicCollision object containing information
+	# about the KinematicBody node collision, if there is one.
+	# We pass in a velocity of zero, and set the test_only argument (the fourth argument) to true
+	# so that the KinematicBody queries the physics world without actually causing any collisions.
+	var collision_results = damage_body.move_and_collide(Vector3.ZERO, true, true, true);
+	
+	# If the KinematicBody collided with something...
+	if (collision_results != null):
+		# If the PhysicsBody the sword collided with has a function called damage, then call it
+		# so the PhysicsBody takes damage from the sword.
+		if collision_results.collider.has_method("damage"):
+			collision_results.collider.damage(SWORD_DAMAGE)
 		
-		# Figure out which part of the sword collided with the body.
-		var sword_part = null
-		if number == "01":
-			sword_part = get_node("Damage_Area_01")
-		elif number == "02":
-			sword_part = get_node("Damage_Area_02")
-		elif number == "03":
-			sword_part = get_node("Damage_Area_03")
-		elif number == "04":
-			sword_part = get_node("Damage_Area_04")
-		
-		# If the body has the damage method/function, then use that, otherwise use apply_impulse.
-		if body.has_method("damage"):
-			body.damage(sword_part.global_transform.looking_at(body.global_transform.origin, Vector3(0, 1, 0)), SWORD_DAMAGE)
-			
-			# Play a sound
-			get_node("AudioStreamPlayer3D").play()
-		
-		elif body.has_method("apply_impulse"):
-			
-			# Calculate roughly what direction the sword collided with the object at.
-			var direction_vector = sword_part.global_transform.origin - body.global_transform.origin
-			
-			# If there is not a controller holding the sword, use the RigidBody node's velocity to move the object(s).
-			# If there IS a controller holding the sword, then use the controller's velocity to move the object(s)
+		# If the PhysicsBody the sword collided with is a RigidBody node...
+		if collision_results.collider is RigidBody:
+			# If the sword is NOT being held by a VR controller...
 			if controller == null:
-				body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * self.linear_velocity)
+				# Then move the RigidBody using the apply_impulse function. For the direction of the
+				# force applied, use the sword's RigidBody node velocity.
+				collision_results.collider.apply_impulse(
+					collision_results.position, 
+					collision_results.normal * linear_velocity * COLLISION_FORCE)
+			# If the sword IS being held by a VR controller...
 			else:
-				body.apply_impulse(direction_vector.normalized(), direction_vector.normalized() * controller.controller_velocity)
-			
-			# Play a sound
-			get_node("AudioStreamPlayer3D").play()
-			
+				# Then move the RigidBody using the apply_impulse function. For the direction of the
+				# force applied, use the velocity of the VR controller.
+				collision_results.collider.apply_impulse(
+					collision_results.position,
+					collision_results.normal * controller.controller_velocity * COLLISION_FORCE)
 		
+		# Play a sound for the sword colliding with something!
+		sword_noise.play()
 

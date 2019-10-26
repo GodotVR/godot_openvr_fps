@@ -1,0 +1,139 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Scenes/GUI.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Main_VR_UI_Base_Control.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Titillium-Regular.otf" type="DynamicFontData" id=3]
+
+[sub_resource type="QuadMesh" id=1]
+size = Vector2( 2, 2 )
+
+[sub_resource type="CubeMesh" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0.320313, 0.320313, 0.320313, 1 )
+metallic = 1.0
+roughness = 0.1
+
+[sub_resource type="ConvexPolygonShape" id=4]
+points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 82
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 42
+font_data = ExtResource( 3 )
+
+[node name="Main_VR_GUI" type="Spatial"]
+transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 4.77395, 4.96041, 19.7775 )
+
+[node name="GUI_Mesh" type="MeshInstance" parent="."]
+transform = Transform( -1, 8.74228e-008, 0, 8.74228e-008, 1, 8.74228e-008, 7.64274e-015, 8.74228e-008, -1, 0, 0, -0.125 )
+mesh = SubResource( 1 )
+material/0 = null
+script = ExtResource( 1 )
+gui_viewport_path = NodePath("../../Main_VR_GUI/GUI")
+
+[node name="GUI_Board" type="MeshInstance" parent="."]
+editor/display_folded = true
+transform = Transform( 1.25, 0, 0, 0, 1.25, 0, 0, 0, 0.25, -0.014788, -0.123899, 0.132493 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="StaticBody" type="StaticBody" parent="GUI_Board"]
+
+[node name="CollisionShape" type="CollisionShape" parent="GUI_Board/StaticBody"]
+shape = SubResource( 4 )
+
+[node name="GUI" type="Viewport" parent="."]
+size = Vector2( 800, 800 )
+transparent_bg = true
+hdr = false
+usage = 1
+render_target_v_flip = true
+gui_snap_controls_to_pixels = false
+
+[node name="Base_Control" type="Control" parent="GUI"]
+margin_right = 800.0
+margin_bottom = 800.0
+script = ExtResource( 2 )
+
+[node name="Label" type="Label" parent="GUI/Base_Control"]
+anchor_right = 1.0
+margin_bottom = 99.0
+custom_fonts/font = SubResource( 5 )
+text = "Godot VR Tutorial"
+align = 1
+valign = 1
+
+[node name="Label_Info" type="Label" parent="GUI/Base_Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -400.0
+margin_top = -306.0
+margin_right = 400.0
+margin_bottom = -207.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 1, 0.273438, 1 )
+text = "Find all of the spheres and destroy them!"
+align = 1
+valign = 1
+
+[node name="Label_Controls" type="Label" parent="GUI/Base_Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -359.0
+margin_top = -201.0
+margin_right = 675.0
+margin_bottom = 326.0
+rect_scale = Vector2( 0.7, 0.7 )
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0.992188, 1, 0, 1 )
+text = "Teleport by pressing the trigger while not holding anything
+
+Move with the touchpads and/or the joysticks
+
+Grab and release objects by pressing the grip button
+
+Change grab modes by pressing the menu button
+
+While holding a object, press the trigger to interact"
+align = 1
+valign = 1
+
+[node name="Label_Sphere_Count" type="Label" parent="GUI/Base_Control"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -400.0
+margin_top = -226.0
+margin_right = 400.0
+margin_bottom = -127.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 0, 1, 0.273438, 1 )
+text = "10 Spheres remaining"
+align = 1
+valign = 1
+
+[node name="Label_Reset" type="Label" parent="GUI/Base_Control"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -400.0
+margin_top = -99.0
+margin_right = 400.0
+custom_fonts/font = SubResource( 6 )
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "Grab and interact with the
+red Box to reset!"
+align = 1
+valign = 1

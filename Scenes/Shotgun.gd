@@ -1,74 +1,117 @@
-extends RigidBody
+# Extend the VR_Interactable_Rigidbody class so the VR controllers know they can interact
+# and call the functions defined in VR_Interactable_Rigidbody with this object.
+extends VR_Interactable_Rigidbody
 
-
-# The mesh used to make the end of the shotgun flash,
-# a constant for how long the shotgun flash is visible,
-# and a variable for tracking how long the flash has been visible.
+# A variable to hold the mesh that is used to simulate the muzzle flash on the shotgun.
 var flash_mesh
+# A constant to define how long the muzzle flash on the shotgun will be visible.
 const FLASH_TIME = 0.25
+# A variable to hold the amount of time the muzzle flash has been visible for.
 var flash_timer = 0
 
-# The Raycast nodes used for the shotgun firing, and the amount of damage the bullet does.
+# A variable that will hold a long mesh that will act as the shotgun's laser sight.
+var laser_sight_mesh
+# A variable to hold a reference to the AudioStreamPlayer used for the shotgun's firing sound.
+var shotgun_fire_sound
+
+# A variable to hold the node that holds all of the Raycast nodes that the shotgun uses for calculating
+# the bullet position and normal when the shotgun is fired.
 var raycasts
-var BULLET_DAMAGE = 30
+# A constant to define the amount of damage a single bullet does.
+const BULLET_DAMAGE = 30
+# A constant that defines the amount of force applied to RigidBody nodes when one of the shotgun's
+# bullets collide. This force is strongest when the object is right next to the shotgun.
+const COLLISION_FORCE = 4
 
 
 func _ready():
-	# Get the nodes, assign them to the proper variables, and make sure the mesh is not visible.
+	# Get the shotgun flash mesh and make it invisible by default.
 	flash_mesh = get_node("Shotgun_Flash")
 	flash_mesh.visible = false
-	
+	# Get the shotgun laser sight mesh and make it invisible by default.
+	laser_sight_mesh = get_node("LaserSight")
+	laser_sight_mesh.visible = false
+	# Get the node that holds all of the Raycast nodes that will be used for the shotgun's bullets
 	raycasts = get_node("Raycasts")
+	# Get the AudioStreamPlayer3D used for shotgun's firing sound
+	shotgun_fire_sound = get_node("AudioStreamPlayer3D")
+
 
 func _physics_process(delta):
-	# If the flash is visible, then remove time from flash_timer (which is a inverted timer, counts down instead of up)
+	# If the muzzle flash is visible...
+	# (flash_timer will be more than zero if the pistol's muzzle flash is visible.)
 	if flash_timer > 0:
+		# Remove time, delta, from the flash_timer variable
 		flash_timer -= delta
-		# If the flash has been visible enough, then make the flash mesh invisible.
+		# If the flash_timer variable is now zero or less, the pistol flash just finished and the
+		# muzzle flash mesh should be made invisible.
 		if flash_timer <= 0:
 			flash_mesh.visible = false
 
 
-# Called when the interact button is pressed while the object is held.
+# Called when the interact button is pressed while the object is held by a VR controller.
 func interact():
-	
-	# If the flash timer says the flash mesh is not visible, then we can fire again.
+	# If the muzzle flash is invisible...
+	# (We can use this to limit the rate of fire for the shotgun to the length of time the muzzle
+	# flash is visible)
 	if flash_timer <= 0:
 		
-		# Reset the flash timer and make the flash mesh visible again.
+		# Set flash_timer to FLASH_TIME and make the muzzle flash mesh visible.
 		flash_timer = FLASH_TIME
 		flash_mesh.visible = true
 		
-		# Go through every raycast in the raycasts node
+		# Go through every raycast in the raycasts node...
 		for raycast in raycasts.get_children():
 			
-			# Rotate the racyast randomly around a small 10 degrees to 10 degrees cone.
-			raycast.rotation_degrees = Vector3(90 + rand_range(10, -10), 0, rand_range(10, -10))
+			# If the node is not a Raycast node, then skip it!
+			if not raycast is RayCast:
+				continue
 			
-			# Update the raycast and see if it has collided with anything
+			# Rotate the raycast randomly around a small 10 degrees to 10 degrees cone.
+            # This will make the raycast rotate randomly within a small cone shape.
+			raycast.rotation_degrees = Vector3(rand_range(10, -10), 0, rand_range(10, -10))
+			
+			# Force the raycast node to update so it collides with the latest version of the physics world.
 			raycast.force_raycast_update()
+			# If the raycast collided with something...
 			if raycast.is_colliding():
 				
-				# Get whatever the raycast collided with
+				# Get the PhysicsBody the raycast collided with
 				var body = raycast.get_collider()
+				# Use the raycast's positive Z axis to determine the direction of the raycast.
+				var direction_vector = raycasts.global_transform.basis.z.normalized()
+				# Get the distance from the node that holds the Raycasts to the raycast collision point.
+				var raycast_distance = raycasts.global_transform.origin.distance_to(raycast.get_collision_point())
 				
-				# If the body has the damage method, then use that, otherwise use apply_impulse.
+				# If the PhysicsBody has a function called damage, then call it so it takes damage.
 				if body.has_method("damage"):
-					body.damage(raycast.global_transform, BULLET_DAMAGE)
-				elif body.has_method("apply_impulse"):
-					var direction_vector = raycast.global_transform.basis.z.normalized()
-					body.apply_impulse((raycast.global_transform.origin - body.global_transform.origin).normalized(), direction_vector * 4)
+					body.damage(BULLET_DAMAGE)
+				
+				# If the PhysicsBody is a RigidBody node...
+				if body is RigidBody:
+					# Calculate how much force will be applied. Account for the distance of the raycast and the
+					# mass of the other object so that objects closer to the shotgun are pushed farther
+					# when the bullet from the shotgun collides.
+					var collision_force = (COLLISION_FORCE / raycast_distance) * body.mass
+					# Push the PhysicsBody using the apply_impulse function!
+					body.apply_impulse((raycast.global_transform.origin - body.global_transform.origin).normalized(), direction_vector * collision_force)
 		
-		# Play a sound
-		get_node("AudioStreamPlayer3D").play()
+		# Play the shotgun firing sound!
+		shotgun_fire_sound.play()
+		
+		# Add a little rumble to the VR controller
+		if controller != null:
+			controller.rumble = 0.25
 
 
-# Called when the object is picked up.
+# Called when the object has just been picked up by a VR controller.
 func picked_up():
-	pass
+	# Make the laser sight mesh visible.
+	laser_sight_mesh.visible = true
 
 
-# Called when the object is dropped.
+# Called when the object has just been dropped up by a VR controller.
 func dropped():
-	pass
+	# Make the laser sight mesh invisible.
+	laser_sight_mesh.visible = false
 

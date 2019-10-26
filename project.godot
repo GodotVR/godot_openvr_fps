@@ -8,9 +8,14 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "RigidBody",
+"class": "VR_Interactable_Rigidbody",
+"language": "GDScript",
+"path": "res://Scenes/VR_Interactable_Rigidbody.gd"
+} ]
 _global_script_class_icons={
-
+"VR_Interactable_Rigidbody": ""
 }
 
 [application]
