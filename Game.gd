@@ -24,7 +24,7 @@ func _ready():
 		# This is not strictly required, but it will make the experience smoother for most VR headsets
 		# and then the computer monitor's VSync will not effect the VR headset.
 		OS.vsync_enabled = false
-		Engine.target_fps = 90
+		Engine.iterations_per_second = 90
 		# Also, the physics FPS in the project settings is also 90 FPS. This makes the physics
 		# run at the same frame rate as the display, which makes things look a little smoother in VR!
 
